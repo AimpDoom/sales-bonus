@@ -101,7 +101,8 @@ function analyzeSalesData(data, options) {
       const cost = product.purchase_price * item.quantity;
       // Посчитать выручку (revenue) с учётом скидки через функцию calculateRevenue
       const revenue = calculateRevenue(item, product);
-      checkTotal += revenue;
+      const revenueCents = Math.round((revenue + Number.EPSILON) * 100);
+      checkTotal += revenueCents;
       // Посчитать прибыль: выручка минус себестоимость
       const profit = revenue - cost;
       // Увеличить общую накопленную прибыль (profit) у продавца
@@ -132,10 +133,10 @@ function analyzeSalesData(data, options) {
   return sellerStats.map((seller) => ({
     seller_id: seller.seller_id,
     name: seller.name,
-    revenue: +parseFloat(seller.revenue).toFixed(2),
-    profit: +parseFloat(seller.profit).toFixed(2),
+    revenue: +seller.revenue.toFixed(2) / 100,
+    profit: +seller.profit.toFixed(2),
     sales_count: seller.sales_count,
     top_products: seller.top_products,
-    bonus: +parseFloat(seller.bonus).toFixed(2),
+    bonus: +seller.bonus.toFixed(2)
   }));
 }
